@@ -18,6 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activity.RoomActivity" />
+        <activity android:name=".Activity.SwitchActivity" />
+        <activity android:name=".Activity.ApplianceActivity"></activity>
     </application>
 
 </manifest>
