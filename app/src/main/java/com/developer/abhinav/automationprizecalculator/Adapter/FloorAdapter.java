@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.developer.abhinav.automationprizecalculator.Model.Floor;
 import com.developer.abhinav.automationprizecalculator.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FloorAdapter extends RecyclerView.Adapter<FloorAdapter.Holder> {
@@ -38,7 +39,6 @@ public class FloorAdapter extends RecyclerView.Adapter<FloorAdapter.Holder> {
 
         public void setup(final Floor floor, final OnItemClickListener listener) {
             floorName.setText(floor.getFloorName());
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -57,7 +57,7 @@ public class FloorAdapter extends RecyclerView.Adapter<FloorAdapter.Holder> {
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.room_list, parent, false);
+                .inflate(R.layout.floor_list, parent, false);
         return new Holder(itemView);
     }
 

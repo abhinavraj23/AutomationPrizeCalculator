@@ -38,7 +38,6 @@ public class ApplianceAdapter extends RecyclerView.Adapter<ApplianceAdapter.Hold
 
         public void setup(final Appliance Appliance, final OnItemClickListener listener) {
             ApplianceName.setText(Appliance.getApplianceName());
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
