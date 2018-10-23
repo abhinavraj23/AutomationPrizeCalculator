@@ -9,6 +9,10 @@ public class Room implements Serializable {
     public Room() {
     }
 
+    public Room(String roomName){
+        this.roomName =roomName;
+    }
+
     public String getRoomName() {
         return roomName;
     }

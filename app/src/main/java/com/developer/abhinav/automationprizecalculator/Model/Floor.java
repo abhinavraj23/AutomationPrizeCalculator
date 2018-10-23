@@ -9,6 +9,10 @@ public class Floor implements Serializable {
     public Floor(){
     }
 
+    public Floor(String floorName){
+        this.floorName =floorName;
+    }
+
     public String getFloorName() {
         return floorName;
     }
