@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.developer.abhinav.automationprizecalculator.Model.Floor;
 import com.developer.abhinav.automationprizecalculator.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FloorAdapter extends RecyclerView.Adapter<FloorAdapter.Holder> {

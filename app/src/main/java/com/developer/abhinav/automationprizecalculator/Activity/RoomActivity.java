@@ -1,6 +1,7 @@
 package com.developer.abhinav.automationprizecalculator.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ public class RoomActivity extends AppCompatActivity {
     RecyclerView listView;
     private RoomAdapter adapter;
     private static Floor floor;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,20 +41,33 @@ public class RoomActivity extends AppCompatActivity {
 
         rooms = new ArrayList<>();
         floor = (Floor) getIntent().getSerializableExtra("Floor");
+
+        sharedPreferences = getSharedPreferences("ROOM", MODE_PRIVATE);
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
         floatingActionButton1 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
 
+        roomCounter = sharedPreferences.getInt(floor.getFloorName(), 0);
+        loadPreviousData(roomCounter);
+
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
+                roomCounter++;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(floor.getFloorName(),roomCounter);
+                editor.commit();
                 new addRoom().execute();
             }
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
+                roomCounter--;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(floor.getFloorName(),roomCounter);
+                editor.commit();
                 new deleteRoom().execute();
             }
         });
@@ -66,7 +81,7 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Room item) {
                 Intent i = new Intent(RoomActivity.this, SwitchActivity.class);
-                i.putExtra("Room",item);
+                i.putExtra("Room", item);
                 startActivity(i);
             }
         });
@@ -85,12 +100,17 @@ public class RoomActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
+    private void loadPreviousData(int counter) {
+        for (int i = 0; i < counter; i++) {
+            new addRoom().execute();
+        }
+    }
+
     private class addRoom extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
-            roomCounter++;
-            rooms.add(new Room("Room "+String.valueOf(roomCounter)));
+            rooms.add(new Room("Room " + String.valueOf(rooms.size() + 1)));
             floor.setRooms(rooms);
             return null;
         }
@@ -106,9 +126,10 @@ public class RoomActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            rooms.remove(rooms.size()-1);
-            floor.setRooms(rooms);
-            roomCounter--;
+            if (roomCounter > 0) {
+                rooms.remove(rooms.size() - 1);
+                floor.setRooms(rooms);
+            }
             return null;
         }
 

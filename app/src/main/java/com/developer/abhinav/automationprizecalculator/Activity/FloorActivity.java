@@ -1,6 +1,7 @@
 package com.developer.abhinav.automationprizecalculator.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class FloorActivity extends AppCompatActivity {
 
     List<Floor> floors;
     private FloorAdapter adapter;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +37,32 @@ public class FloorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_floor);
 
         floors = new ArrayList<>();
+        sharedPreferences = getSharedPreferences("FLOOR", MODE_PRIVATE);
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
         floatingActionButton1 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
 
+        floorCounter = sharedPreferences.getInt("COUNTER", 0);
+        loadPreviousData(floorCounter);
+
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
+                floorCounter++;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("COUNTER", floorCounter);
+                editor.commit();
                 new addFloor().execute();
             }
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
+                floorCounter--;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("COUNTER", floorCounter);
+                editor.commit();
                 new deleteFloor().execute();
             }
         });
@@ -62,7 +76,7 @@ public class FloorActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Floor item) {
                 Intent i = new Intent(FloorActivity.this, RoomActivity.class);
-                i.putExtra("Floor",item);
+                i.putExtra("Floor", item);
                 startActivity(i);
             }
         });
@@ -81,12 +95,17 @@ public class FloorActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
+    private void loadPreviousData(int counter) {
+        for (int i = 0; i < counter; i++) {
+            new addFloor().execute();
+        }
+    }
+
     private class addFloor extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
-            floorCounter++;
-            floors.add(new Floor("Floor "+String.valueOf(floorCounter)));
+            floors.add(new Floor("Floor " + String.valueOf(floors.size()+1)));
             return null;
         }
 
@@ -101,8 +120,9 @@ public class FloorActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            floors.remove(floors.size()-1);
-            floorCounter--;
+            if (floorCounter > 0) {
+                floors.remove(floors.size() - 1);
+            }
             return null;
         }
 

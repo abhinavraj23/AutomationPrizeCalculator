@@ -1,6 +1,7 @@
 package com.developer.abhinav.automationprizecalculator.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -32,28 +33,41 @@ public class SwitchActivity extends AppCompatActivity {
     RecyclerView listView;
     private SwitchAdapter adapter;
     private static Room room;
-    
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_switch);
 
         switches = new ArrayList<>();
+        sharedPreferences = getSharedPreferences("SWITCH", MODE_PRIVATE);
         room = (Room) getIntent().getSerializableExtra("Room");
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
         floatingActionButton1 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
 
+        switchCounter = sharedPreferences.getInt(room.getRoomName(), 0);
+        loadPreviousData(switchCounter);
+
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
+                switchCounter++;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(room.getRoomName(),switchCounter);
+                editor.commit();
                 new addSwitch().execute();
             }
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
+                switchCounter--;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(room.getRoomName(),switchCounter);
+                editor.commit();
                 new deleteSwitch().execute();
             }
         });
@@ -67,7 +81,7 @@ public class SwitchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Switch item) {
                 Intent i = new Intent(SwitchActivity.this, ApplianceActivity.class);
-                i.putExtra("Switch",item);
+                i.putExtra("Switch", item);
                 startActivity(i);
             }
         });
@@ -86,12 +100,17 @@ public class SwitchActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
+    private void loadPreviousData(int counter){
+        for(int i=0;i<counter;i++){
+            new addSwitch().execute();
+        }
+    }
+
     private class addSwitch extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
-            switchCounter++;
-            switches.add(new Switch("Switch Board "+String.valueOf(switchCounter)));
+            switches.add(new Switch("Switch Board " + String.valueOf(switches.size()+1)));
             room.setSwitches(switches);
             return null;
         }
@@ -107,9 +126,10 @@ public class SwitchActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            switches.remove(switches.size()-1);
-            room.setSwitches(switches);
-            switchCounter--;
+            if (switchCounter > 0) {
+                switches.remove(switches.size() - 1);
+                room.setSwitches(switches);
+            }
             return null;
         }
 
