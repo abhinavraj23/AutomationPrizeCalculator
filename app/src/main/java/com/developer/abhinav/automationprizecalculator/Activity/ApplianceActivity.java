@@ -87,7 +87,7 @@ public class ApplianceActivity extends AppCompatActivity {
         aSwitch = (Switch) getIntent().getSerializableExtra("Switch");
         String savedString = sharedPreferences.getString(String.valueOf(aSwitch.getSwitchBoard()), String.valueOf(""));
         StringTokenizer st = new StringTokenizer(savedString, ",");
-        while (st.hasMoreTokens()){
+        while (st.hasMoreTokens()) {
             allApplianceIndex.add(Integer.parseInt(st.nextToken()));
         }
 
@@ -133,7 +133,7 @@ public class ApplianceActivity extends AppCompatActivity {
                 okay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        for(int i = 0;i<views.size();i++)
+                        for (int i = 0; i < views.size(); i++)
                             views.get(i).setBackgroundColor(Color.TRANSPARENT);
                         addSelectedAppliances(selectedIndex);
                         StringBuilder str = new StringBuilder();
@@ -162,10 +162,17 @@ public class ApplianceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
                 applianceCounter--;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(aSwitch.getSwitchBoard(), applianceCounter);
-                editor.commit();
-                new deleteAppliance().execute();
+                if (allApplianceIndex.size() > 0) {
+                    allApplianceIndex.remove(allApplianceIndex.size() - 1);
+                    StringBuilder str = new StringBuilder();
+                    for (int i = 0; i < allApplianceIndex.size(); i++) {
+                        str.append(allApplianceIndex.get(i)).append(",");
+                    }
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(aSwitch.getSwitchBoard(), str.toString());
+                    editor.commit();
+                    new deleteAppliance().execute();
+                }
             }
         });
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +210,7 @@ public class ApplianceActivity extends AppCompatActivity {
 
     private void addSelectedAppliances(List<Integer> index) {
         for (int i = 0; i < index.size(); i++) {
+            applianceLists.get(index.get(i)).setSelected(false);
             new addAppliance().execute(applianceLists.get(index.get(i)).getApplianceName());
         }
     }
@@ -227,10 +235,8 @@ public class ApplianceActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            if (applianceCounter > 0) {
-                appliances.remove(appliances.size() - 1);
-                aSwitch.setAppliances(appliances);
-            }
+            appliances.remove(appliances.size() - 1);
+            aSwitch.setAppliances(appliances);
             return null;
         }
 
