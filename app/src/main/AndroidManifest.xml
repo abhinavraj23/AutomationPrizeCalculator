@@ -20,7 +20,8 @@
         </activity>
         <activity android:name=".Activity.RoomActivity" />
         <activity android:name=".Activity.SwitchActivity" />
-        <activity android:name=".Activity.ApplianceActivity"></activity>
+        <activity android:name=".Activity.ApplianceActivity" />
+        <activity android:name=".Activity.ListActivity"></activity>
     </application>
 
 </manifest>

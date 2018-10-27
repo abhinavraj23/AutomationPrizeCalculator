@@ -48,32 +48,37 @@ public class RoomActivity extends AppCompatActivity {
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
 
-        roomCounter = sharedPreferences.getInt(floor.getFloorName(), 0);
+        roomCounter = sharedPreferences.getInt(floor.getID(), 0);
         loadPreviousData(roomCounter);
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
-                roomCounter++;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(floor.getFloorName(),roomCounter);
-                editor.commit();
-                new addRoom().execute();
+                if(rooms.size() < 5) {
+                    roomCounter++;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(floor.getID(), roomCounter);
+                    editor.commit();
+                    new addRoom().execute();
+                }
             }
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-                roomCounter--;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(floor.getFloorName(),roomCounter);
-                editor.commit();
-                new deleteRoom().execute();
+                if(rooms.size() != 0) {
+                    roomCounter--;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(floor.getID(), roomCounter);
+                    editor.commit();
+                    new deleteRoom().execute();
+                }
             }
         });
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
+                startActivity(new Intent(getApplicationContext(),ListActivity.class));
             }
         });
 
@@ -81,7 +86,7 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Room item) {
                 Intent i = new Intent(RoomActivity.this, SwitchActivity.class);
-                i.putExtra("Room", item);
+                i.putExtra("Room",item);
                 startActivity(i);
             }
         });
@@ -110,7 +115,7 @@ public class RoomActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            rooms.add(new Room("Room " + String.valueOf(rooms.size() + 1)));
+            rooms.add(new Room("Room " + String.valueOf(rooms.size() + 1),String.valueOf(floor.getID())+String.valueOf(rooms.size() + 1)));
             floor.setRooms(rooms);
             return null;
         }

@@ -8,12 +8,14 @@ public class Floor implements Serializable {
 
     private String floorName;
     private List<Room> rooms;
+    private String ID;
 
     public Floor(){
     }
 
-    public Floor(String floorName){
+    public Floor(String floorName, String ID){
         this.floorName = floorName;
+        this.ID = ID;
     }
 
     public String getFloorName() {
@@ -22,6 +24,14 @@ public class Floor implements Serializable {
 
     public void setFloorName(String floorName) {
         this.floorName = floorName;
+    }
+
+    public String  getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public List<Room> getRooms() {

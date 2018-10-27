@@ -49,26 +49,31 @@ public class FloorActivity extends AppCompatActivity {
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
-                floorCounter++;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("COUNTER", floorCounter);
-                editor.commit();
-                new addFloor().execute();
+                if (floors.size() < 5) {
+                    floorCounter++;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("COUNTER", floorCounter);
+                    editor.commit();
+                    new addFloor().execute();
+                }
             }
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-                floorCounter--;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("COUNTER", floorCounter);
-                editor.commit();
-                new deleteFloor().execute();
+                if(floors.size() != 0) {
+                    floorCounter--;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("COUNTER", floorCounter);
+                    editor.commit();
+                    new deleteFloor().execute();
+                }
             }
         });
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
+                startActivity(new Intent(getApplicationContext(), ListActivity.class));
             }
         });
 
@@ -105,7 +110,7 @@ public class FloorActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            floors.add(new Floor("Floor " + String.valueOf(floors.size()+1)));
+            floors.add(new Floor("Floor " + String.valueOf(floors.size() + 1), String.valueOf(floors.size() + 1)));
             return null;
         }
 

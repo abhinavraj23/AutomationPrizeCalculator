@@ -8,12 +8,14 @@ public class Switch implements Serializable {
 
     private String switchBoard;
     private List<Appliance> appliances;
+    private String ID;
 
     public  Switch(){
     }
 
-    public Switch(String switchBoard){
+    public Switch(String switchBoard,String ID){
         this.switchBoard = switchBoard;
+        this.ID = ID;
     }
 
     public String getSwitchBoard() {
@@ -24,6 +26,13 @@ public class Switch implements Serializable {
         this.switchBoard = switchBoard;
     }
 
+    public String  getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
     public List<Appliance> getAppliances() {
         return appliances;
     }

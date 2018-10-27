@@ -48,32 +48,37 @@ public class SwitchActivity extends AppCompatActivity {
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
 
-        switchCounter = sharedPreferences.getInt(room.getRoomName(), 0);
+        switchCounter = sharedPreferences.getInt(room.getID(), 0);
         loadPreviousData(switchCounter);
 
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
-                switchCounter++;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(room.getRoomName(),switchCounter);
-                editor.commit();
-                new addSwitch().execute();
+                if (switches.size() < 6) {
+                    switchCounter++;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(room.getID(), switchCounter);
+                    editor.commit();
+                    new addSwitch().execute();
+                }
             }
         });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-                switchCounter--;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(room.getRoomName(),switchCounter);
-                editor.commit();
-                new deleteSwitch().execute();
+                if (switches.size() != 0) {
+                    switchCounter--;
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(room.getID(), switchCounter);
+                    editor.commit();
+                    new deleteSwitch().execute();
+                }
             }
         });
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
+                startActivity(new Intent(getApplicationContext(), ListActivity.class));
             }
         });
 
@@ -100,8 +105,8 @@ public class SwitchActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
-    private void loadPreviousData(int counter){
-        for(int i=0;i<counter;i++){
+    private void loadPreviousData(int counter) {
+        for (int i = 0; i < counter; i++) {
             new addSwitch().execute();
         }
     }
@@ -110,7 +115,7 @@ public class SwitchActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            switches.add(new Switch("Switch Board " + String.valueOf(switches.size()+1)));
+            switches.add(new Switch("Switch Board " + String.valueOf(switches.size() + 1), String.valueOf(room.getID()) + String.valueOf(switches.size() + 1)));
             room.setSwitches(switches);
             return null;
         }

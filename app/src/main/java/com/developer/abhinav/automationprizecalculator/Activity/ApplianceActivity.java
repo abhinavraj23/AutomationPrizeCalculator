@@ -48,7 +48,7 @@ public class ApplianceActivity extends AppCompatActivity {
     List<Integer> selectedIndex;
     List<TextView> views;
     private ApplianceAdapter adapter;
-    private Switch aSwitch;
+    private static Switch aSwitch;
     SharedPreferences sharedPreferences;
     List<ApplianceList> applianceLists;
     private static CustomAdapter customAdapter;
@@ -85,7 +85,7 @@ public class ApplianceActivity extends AppCompatActivity {
 
         appliances = new ArrayList<>();
         aSwitch = (Switch) getIntent().getSerializableExtra("Switch");
-        String savedString = sharedPreferences.getString(String.valueOf(aSwitch.getSwitchBoard()), String.valueOf(""));
+        String savedString = sharedPreferences.getString(aSwitch.getID(), String.valueOf(""));
         StringTokenizer st = new StringTokenizer(savedString, ",");
         while (st.hasMoreTokens()) {
             allApplianceIndex.add(Integer.parseInt(st.nextToken()));
@@ -141,7 +141,7 @@ public class ApplianceActivity extends AppCompatActivity {
                             str.append(allApplianceIndex.get(i)).append(",");
                         }
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(aSwitch.getSwitchBoard(), str.toString());
+                        editor.putString(aSwitch.getID(), str.toString());
                         editor.commit();
                         views.clear();
                         selectedIndex.clear();
@@ -169,7 +169,7 @@ public class ApplianceActivity extends AppCompatActivity {
                         str.append(allApplianceIndex.get(i)).append(",");
                     }
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(aSwitch.getSwitchBoard(), str.toString());
+                    editor.putString(aSwitch.getID(), str.toString());
                     editor.commit();
                     new deleteAppliance().execute();
                 }
@@ -178,6 +178,7 @@ public class ApplianceActivity extends AppCompatActivity {
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
+                startActivity(new Intent(getApplicationContext(),ListActivity.class));
             }
         });
 
@@ -219,7 +220,7 @@ public class ApplianceActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            appliances.add(new Appliance(params[0]));
+            appliances.add(new Appliance(params[0],String.valueOf(aSwitch.getID())+String.valueOf(appliances.size()+1)));
             aSwitch.setAppliances(appliances);
             return null;
         }
