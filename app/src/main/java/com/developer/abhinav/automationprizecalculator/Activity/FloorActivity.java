@@ -49,7 +49,7 @@ public class FloorActivity extends AppCompatActivity {
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
-                if (floors.size() < 5) {
+                if (floorCounter < 4) {
                     floorCounter++;
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt("COUNTER", floorCounter);
@@ -61,7 +61,7 @@ public class FloorActivity extends AppCompatActivity {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-                if(floors.size() != 0) {
+                if (floors.size() != 0) {
                     floorCounter--;
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt("COUNTER", floorCounter);
@@ -125,9 +125,7 @@ public class FloorActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            if (floorCounter > 0) {
-                floors.remove(floors.size() - 1);
-            }
+            floors.remove(floors.size() - 1);
             return null;
         }
 

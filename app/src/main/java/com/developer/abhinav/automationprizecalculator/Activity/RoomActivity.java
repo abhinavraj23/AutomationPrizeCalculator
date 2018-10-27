@@ -54,7 +54,7 @@ public class RoomActivity extends AppCompatActivity {
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
-                if(rooms.size() < 5) {
+                if (rooms.size() < 4) {
                     roomCounter++;
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt(floor.getID(), roomCounter);
@@ -66,7 +66,7 @@ public class RoomActivity extends AppCompatActivity {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-                if(rooms.size() != 0) {
+                if (rooms.size() != 0) {
                     roomCounter--;
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt(floor.getID(), roomCounter);
@@ -78,7 +78,7 @@ public class RoomActivity extends AppCompatActivity {
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
-                startActivity(new Intent(getApplicationContext(),ListActivity.class));
+                startActivity(new Intent(getApplicationContext(), ListActivity.class));
             }
         });
 
@@ -86,7 +86,7 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Room item) {
                 Intent i = new Intent(RoomActivity.this, SwitchActivity.class);
-                i.putExtra("Room",item);
+                i.putExtra("Room", item);
                 startActivity(i);
             }
         });
@@ -115,7 +115,7 @@ public class RoomActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            rooms.add(new Room("Room " + String.valueOf(rooms.size() + 1),String.valueOf(floor.getID())+String.valueOf(rooms.size() + 1)));
+            rooms.add(new Room("Room " + String.valueOf(rooms.size() + 1), String.valueOf(floor.getID()) + String.valueOf(rooms.size() + 1)));
             floor.setRooms(rooms);
             return null;
         }
@@ -131,10 +131,8 @@ public class RoomActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            if (roomCounter > 0) {
-                rooms.remove(rooms.size() - 1);
-                floor.setRooms(rooms);
-            }
+            rooms.remove(rooms.size() - 1);
+            floor.setRooms(rooms);
             return null;
         }
 

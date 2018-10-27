@@ -143,25 +143,58 @@ public class ListActivity extends AppCompatActivity {
                             noOfType0Appliances--;
                         }
                     }
+                    int applianceCounter = Integer.parseInt(appliance.getApplianceID().substring(3, 4))-(applianceIndex.size()-noOfType0Appliances);
                     switch (noOfType0Appliances % 4) {
                         case 0:
                             appliance.setPrize(4999 / 4);
                             totalSum += (double) (4999) / (double) 4;
+                            if (isDimmableLight(appliance)) {
+                                appliance.setPrize(appliance.getPrize() + 500);
+                                totalSum += 500;
+                            }
                             break;
                         case 1:
-                            appliance.setPrize(1999);
-                            totalSum += 1999;
+                            if (applianceCounter == noOfType0Appliances) {
+                                appliance.setPrize(1999);
+                                totalSum += 1999;
+                            } else {
+                                appliance.setPrize(4999 / 4);
+                                totalSum += (double) (4999) / (double) 4;
+                            }
+                            if (isDimmableLight(appliance)) {
+                                appliance.setPrize(appliance.getPrize() + 500);
+                                totalSum += 500;
+                            }
                             break;
                         case 2:
-                            appliance.setPrize(3499 / 2);
-                            totalSum += (double) (3499) / (double) 2;
+                            if (applianceCounter == noOfType0Appliances || applianceCounter == noOfType0Appliances - 1) {
+                                appliance.setPrize(3499 / 2);
+                                totalSum += (double) (3499) / (double) 2;
+                            } else {
+                                appliance.setPrize(4999 / 4);
+                                totalSum += (double) (4999) / (double) 4;
+                            }
+                            if (isDimmableLight(appliance)) {
+                                appliance.setPrize(appliance.getPrize() + 500);
+                                totalSum += 500;
+                            }
                             break;
                         case 3:
-                            appliance.setPrize(4999 / 3);
-                            totalSum += (double) (4999) / (double) 3;
+                            if (applianceCounter == noOfType0Appliances || applianceCounter == noOfType0Appliances - 1 || applianceCounter == noOfType0Appliances - 2) {
+                                appliance.setPrize(4999 / 3);
+                                totalSum += (double) (4999) / (double) 3;
+                            } else {
+                                appliance.setPrize(4999 / 4);
+                                totalSum += (double) (4999) / (double) 4;
+                            }
+                            if (isDimmableLight(appliance)) {
+                                appliance.setPrize(appliance.getPrize() + 500);
+                                totalSum += 500;
+                            }
                             break;
                         default:
                     }
+
                 }
             }
             return null;
@@ -170,8 +203,18 @@ public class ListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            totalPrize.setText("NET PRIZE : "+String.valueOf(totalSum));
+            totalPrize.setText("NET PRIZE : " + String.valueOf(totalSum));
             finalApplianceAdapter.notifyDataSetChanged();
         }
+    }
+
+    private boolean isDimmableLight(FinalAppliance appliance) {
+        String applianceID = appliance.getApplianceID();
+        int index;
+        if (applianceID.length() == 5)
+            index = Integer.parseInt(applianceID.substring(applianceID.length() - 1));
+        else
+            index = Integer.parseInt(applianceID.substring(applianceID.length() - 2));
+        return (index == 1);
     }
 }

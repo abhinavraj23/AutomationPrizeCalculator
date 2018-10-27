@@ -54,7 +54,7 @@ public class SwitchActivity extends AppCompatActivity {
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
-                if (switches.size() < 6) {
+                if (switches.size() < 5) {
                     switchCounter++;
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putInt(room.getID(), switchCounter);
@@ -131,10 +131,8 @@ public class SwitchActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            if (switchCounter > 0) {
-                switches.remove(switches.size() - 1);
-                room.setSwitches(switches);
-            }
+            switches.remove(switches.size() - 1);
+            room.setSwitches(switches);
             return null;
         }
 
